@@ -492,6 +492,19 @@ class ThreadLocalRegistryImpl {
   static void StartWatcherThreadFor(DWORD thread_id) {
     // The returned handle will be kept in thread_map and closed by
     // watcher_thread in WatcherThreadFunc.
+#if GTEST_OS_WINDOWS_MOBILE
+    HANDLE thread = INVALID_HANDLE_VALUE;
+    if (thread_id == ::GetCurrentThreadId())
+    {
+        thread = ::GetCurrentThread();
+    }
+    else
+    {
+        thread = ::OpenThread(SYNCHRONIZE | THREAD_QUERY_INFORMATION,
+                              FALSE,
+                              thread_id);
+    }
+#endif
     HANDLE thread = ::OpenThread(SYNCHRONIZE | THREAD_QUERY_INFORMATION,
                                  FALSE,
                                  thread_id);

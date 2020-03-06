@@ -278,6 +278,10 @@
 #include <utility>
 #include <vector>  // NOLINT
 
+#ifdef UNDER_CE
+#include <winbase.h>
+#endif
+
 #include "gtest/internal/gtest-port-arch.h"
 #include "gtest/internal/custom/gtest-port.h"
 
@@ -1693,8 +1697,11 @@ class GTEST_API_ Mutex {
   // by the linker.
   MutexType type_;
   long critical_section_init_phase_;  // NOLINT
+#if GTEST_OS_WINDOWS_MOBILE
+  CRITICAL_SECTION* critical_section_;
+#else
   _RTL_CRITICAL_SECTION* critical_section_;
-
+#endif
   GTEST_DISALLOW_COPY_AND_ASSIGN_(Mutex);
 };
 
